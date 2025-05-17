@@ -2,10 +2,10 @@
 
 ## Setup
 
-1. Create a virtual environment:
+1. Create a virtual environment :
 ```bash
 python -m venv .venv
-source .venv\Scripts\activate
+source .venv\Scripts\activate 
 ```
 
 2. Install dependencies:
@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ```
 
 3. Configure environment:
-- Copy `.env.example` to `.env`
+
 - Add your OpenAI API key to `.env`
 
 4. Run the application:
