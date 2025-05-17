@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Extractor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Company Information Extractor</h1>
+            <div class="input-section">
+                <textarea id="companyText" placeholder="Enter company information here..." rows="10" cols="50"></textarea>
+                <br>
+                <button id="process-btn" onclick="extractInfo()">Extract Information</button>
+            </div>
+            <div class="results-section" id="results">
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function extractInfo() {
+            const text = document.getElementById('companyText').value;
+            if (!text) {
+                alert('Please enter some text');
+                return;
+            }
+
+            fetch('/extract', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = `
+        <h3>Extracted Company Information</h3>
+        <ul>
+            <li><strong>Company Name:</strong> ${data.company_name || "Not Available"}</li>
+            <li><strong>Founded:</strong> ${data.founded || "Not Available"}</li>
+            <li><strong>Industry:</strong> ${data.industry || "Not Available"}</li>
+            <li><strong>Net Income:</strong> ${data.net_income || "Not Available"}</li>
+            <li><strong>Main Products:</strong> 
+                <ul>
+                    ${(data.main_products || []).map(product => `<li>${product}</li>`).join("")}
+                </ul>
+            </li>
+            <li><strong>Financial Ratios:</strong>
+                <ul>
+                    <li>Profit Margin: ${data.financial_ratios?.profit_margin || "Not Available"}</li>
+                    <li>Current Ratio: ${data.financial_ratios?.current_ratio || "Not Available"}</li>
+                    <li>Debt to Equity Ratio: ${data.financial_ratios?.debt_to_equity_ratio || "Not Available"}</li>
+                </ul>
+            </li>
+        </ul>
+    `;
+})
+
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request');
+            });
+        }
+    </script>
+</body>
+</html>
