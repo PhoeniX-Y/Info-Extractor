@@ -11,7 +11,7 @@ class OpenAICompanyInfoExtractor:
         self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         self.text = text
 
-    def extract_info(self):  # renamed from OpenapiExtractor
+    def extract_info(self): 
         messages = [
             {
                 "role": "system",
@@ -33,11 +33,13 @@ class OpenAICompanyInfoExtractor:
                 max_tokens=1000
             )
 
-            # Extract the function call arguments from the response
+
+            
             tool_calls = response.choices[0].message.tool_calls
             if tool_calls:
                 arguments = tool_calls[0].function.arguments
-                # Parse the JSON arguments
+
+                
                 extracted_data = json.loads(arguments)
                 return extracted_data
             else:
